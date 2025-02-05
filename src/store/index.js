@@ -262,7 +262,7 @@ export default new Vuex.Store({
         );
         commit("setUser", userCredential.user);
         commit("setLoading", false);
-        Vue.$toast.success("Signup successful! 🎉", { duration: 1000 });
+        Vue.$toast.success("Signup successful! ", { duration: 1000 });
       } catch (error) {
         commit("setLoading", false);
         Vue.$toast.error(`Signup failed: ${error.message}`, {
@@ -282,7 +282,7 @@ export default new Vuex.Store({
         );
         commit("setUser", userCredential.user);
         commit("setLoading", false);
-        Vue.$toast.success("Login successful! 🚀", { duration: 1000 });
+        Vue.$toast.success("Login successful! ", { duration: 1000 });
       } catch (error) {
         commit("setLoading", false);
         Vue.$toast.error(`Login failed: ${error.message}`, {
@@ -299,7 +299,7 @@ export default new Vuex.Store({
         console.log("Google Sign-In Successful:", result.user);
         commit("setUser", result.user);
         commit("setIsloading", false);
-        Vue.$toast.success("Google Sign-In successful! 🔥", {
+        Vue.$toast.success("Google Sign-In successful! ", {
           duration: 1000,
         });
       } catch (error) {
@@ -319,7 +319,7 @@ export default new Vuex.Store({
         console.log("Google Sign-Up Successful:", result.user);
         commit("setUser", result.user);
         commit("setIsloading", false);
-        Vue.$toast.success("Google Sign-Up successful! 🎊", {
+        Vue.$toast.success("Google Sign-Up successful! ", {
           duration: 1000,
         });
       } catch (error) {
@@ -337,7 +337,7 @@ export default new Vuex.Store({
         await signOut(auth);
         commit("clearUser");
         commit("setLoading", false);
-        Vue.$toast.success("Logout successful! ✅", { duration: 1000 });
+        Vue.$toast.success("Logout successful! ", { duration: 1000 });
       } catch (error) {
         commit("setLoading", false);
         console.error("Logout failed:", error);

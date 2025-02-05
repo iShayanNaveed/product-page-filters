@@ -124,8 +124,9 @@ export default {
   top: 0;
   left: 0;
   width: 250px;
-  height: 100%;
-  background-color: #f8f9fa;
+  height: 80%;
+  margin-top: 5rem;
+  background-color: #bcabab00;
   padding: 20px;
   transition: transform 0.3s ease-in-out;
   z-index: 1;
