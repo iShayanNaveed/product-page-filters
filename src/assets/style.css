@@ -62,7 +62,7 @@ body {
 .product-card {
   background-color: white;
   transition: transform 0.3s ease;
-  width: 80%;
+  width: 100%;
 }
 
 .product-card:hover {

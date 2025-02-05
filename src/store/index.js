@@ -12,10 +12,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    modalInstance: null,
     user: null,
     loading: false,
     isLoading: false,
+    isSidebarOpen: true,
 
     products: [
       {
@@ -188,7 +188,6 @@ export default new Vuex.Store({
       category: "All",
       rating: 0,
     },
-
     sortOption: "price",
   },
   getters: {
@@ -217,6 +216,8 @@ export default new Vuex.Store({
       return filtered;
     },
     isAuthenticated: (state) => state.user !== null && state.user !== undefined,
+
+    isSidebarOpen: (state) => state.isSidebarOpen,
   },
   mutations: {
     setFilter(state, { key, value }) {
@@ -238,6 +239,10 @@ export default new Vuex.Store({
     },
     setIsloading(state, loading) {
       state.isLoading = loading;
+    },
+
+    TOGGLE_SIDEBAR(state) {
+      state.isSidebarOpen = !state.isSidebarOpen;
     },
   },
   actions: {
@@ -280,7 +285,9 @@ export default new Vuex.Store({
         Vue.$toast.success("Login successful! 🚀", { duration: 1000 });
       } catch (error) {
         commit("setLoading", false);
-        Vue.$toast.success("Login successful! 🚀", { duration: 1000 });
+        Vue.$toast.error(`Login failed: ${error.message}`, {
+          duration: 1000,
+        });
         console.log("Error logging in:", error);
         throw error;
       }
@@ -339,6 +346,9 @@ export default new Vuex.Store({
         });
         throw error;
       }
+    },
+    toggleSidebar({ commit }) {
+      commit("TOGGLE_SIDEBAR");
     },
   },
   modules: {},
