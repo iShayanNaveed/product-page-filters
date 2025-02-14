@@ -7,7 +7,16 @@
       <SideBar />
       <h2 class="my-3 mx-auto">Filtered Products</h2>
       <hr />
-      <ProductCard :products="products" />
+      <div v-if="filteredProducts.length" class="row w-100">
+        <div
+          v-for="product in filteredProducts"
+          :key="product.id"
+          class="col-md-6"
+        >
+          <ProductCard :product="product" />
+        </div>
+      </div>
+      <p v-else>No products found based on selected filters.</p>
     </div>
   </div>
 </template>
@@ -25,9 +34,9 @@ export default {
   computed: {
     ...mapState(["isSidebarOpen"]),
     ...mapGetters(["filteredProducts"]),
-    products() {
-      return this.filteredProducts;
-    },
+    // products() {
+    //   return this.filteredProducts;
+    // },
     sidebarWidth() {
       return this.isSidebarOpen ? 250 : 0;
     },

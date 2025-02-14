@@ -13,7 +13,9 @@
     "firebase": "^11.2.0",
     "lucide": "^0.474.0",
     "lucide-vue": "^0.474.0",
+    "multi-range-slider-vue": "^1.1.4",
     "vue": "^2.7.16",
+    "vue-range-slider": "^0.6.0",
     "vue-router": "^3.5.1",
     "vue-toastification": "^1.7.14",
     "vuex": "^3.6.2"

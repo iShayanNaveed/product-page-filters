@@ -184,7 +184,7 @@ export default new Vuex.Store({
     ],
 
     filters: {
-      priceRange: 500,
+      priceRange: [0, 500],
       category: "All",
       rating: 0,
     },
@@ -199,7 +199,11 @@ export default new Vuex.Store({
         ) {
           return false;
         }
-        if (product.price > state.filters.priceRange) {
+        if (
+          product.price < state.filters.priceRange[0] ||
+          product.price > state.filters.priceRange[1]
+        ) {
+          console.log("pr alrt");
           return false;
         }
         if (state.filters.rating > 0 && product.rating < state.filters.rating) {
@@ -222,7 +226,7 @@ export default new Vuex.Store({
   mutations: {
     setFilter(state, { key, value }) {
       state.filters[key] = value;
-      console.log("test dot syntax", state.filters);
+      // console.log("test dot syntax", state.filters);
     },
     setSortOption(state, option) {
       state.sortOption = option;
@@ -243,6 +247,9 @@ export default new Vuex.Store({
 
     TOGGLE_SIDEBAR(state) {
       state.isSidebarOpen = !state.isSidebarOpen;
+    },
+    SET_PRICE_RANGE(state, range) {
+      state.filters.priceRange = range;
     },
   },
   actions: {

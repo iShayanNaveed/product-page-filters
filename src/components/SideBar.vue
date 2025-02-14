@@ -26,18 +26,30 @@
             <option value="Books">Books</option>
           </select>
 
-          <label for="priceRange"
-            >Price Range: {{ localFilters.priceRange }}</label
-          >
-          <input
-            type="range"
-            id="priceRange"
-            class="form-range"
-            v-model="localFilters.priceRange"
-            min="0"
-            max="500"
-            step="10"
-          />
+          <label for="priceRange">
+            Price Range: {{ min }} -
+            {{ max }}
+          </label>
+          <div class="range_container mx-auto mt-3">
+            <div class="sliders_control">
+              <input
+                id="fromSlider"
+                type="range"
+                v-model="min"
+                min="0"
+                max="499"
+                @input="validateMin"
+              />
+              <input
+                id="toSlider"
+                type="range"
+                v-model="max"
+                min="min"
+                max="500"
+                @input="validateMax"
+              />
+            </div>
+          </div>
 
           <label for="rating">Rating:</label>
           <select
@@ -76,6 +88,7 @@
 <script>
 import toogleSidebar from "@/assets/toogleSidebar.vue";
 import { mapState, mapActions } from "vuex";
+
 export default {
   name: "Sidebar",
   components: {
@@ -83,24 +96,36 @@ export default {
   },
   data() {
     return {
-      localFilters: {},
-      localSortOption: "",
+      localFilters: { category: "All", priceRange: [0, 500], rating: 0 },
+      localSortOption: "price",
+      min: 0,
+      max: 500,
     };
   },
   computed: {
     ...mapState(["filters", "sortOption", "isSidebarOpen"]),
   },
   mounted() {
-    this.localFilters = { ...this.filters };
+    this.localFilters = JSON.parse(JSON.stringify(this.filters));
+
+    if (!Array.isArray(this.localFilters.priceRange)) {
+      this.localFilters.priceRange = [0, 500];
+    }
+    console.log(this.localFilters, this.filters);
+
     this.localSortOption = this.sortOption;
+    const [priceMin, priceMax] = this.filters.priceRange;
+    this.min = priceMin;
+    this.max = priceMax;
   },
   methods: {
     ...mapActions(["updateFilter", "updateSortOption", "toggleSidebar"]),
     applyFilters() {
+      console.log("Saving Filters:", this.localFilters.priceRange);
       this.updateFilter({ key: "category", value: this.localFilters.category });
       this.updateFilter({
         key: "priceRange",
-        value: this.localFilters.priceRange,
+        value: [this.min, this.max],
       });
       this.updateFilter({ key: "rating", value: this.localFilters.rating });
       this.updateSortOption(this.localSortOption);
@@ -108,13 +133,39 @@ export default {
     resetFilters() {
       this.localFilters = {
         category: "All",
-        priceRange: 500,
+        // priceRange: [0, 500],
         rating: 0,
       };
+      this.min = 0;
+      this.max = 500;
       this.localSortOption = "price";
       this.applyFilters();
     },
+    validateMin() {
+      if (this.min >= this.max) {
+        this.min = this.max - 1;
+      }
+    },
+    validateMax() {
+      if (this.max <= this.min) {
+        this.max = this.min + 1;
+      }
+    },
   },
+  // watch: {
+  //   "localFilters.priceRange": {
+  //     handler(newValue) {
+  //       if (newValue[0] >= newValue[1]) {
+  //         this.localFilters.priceRange[0] = newValue[1] - 1;
+  //       }
+
+  //       if (newValue[1] <= newValue[0]) {
+  //         this.localFilters.priceRange[1] = newValue[0] + 1;
+  //       }
+  //     },
+  //     deep: true,
+  //   },
+  // },
 };
 </script>
 
@@ -137,7 +188,9 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-
+input[type="range"] {
+  accent-color: green !important;
+}
 .sidebar-body {
   margin-top: 3rem;
   height: 25rem;
@@ -153,6 +206,84 @@ export default {
 .slide-enter-from,
 .slide-leave-to {
   transform: translateX(-100%);
+}
+.range_container {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  /* margin: 35% auto; */
+}
+
+.sliders_control {
+  position: relative;
+  min-height: 1rem;
+}
+
+.form_control {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  font-size: 24px;
+  color: #635a5a;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  pointer-events: all;
+  width: 24px;
+  height: 24px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #c6c6c6;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  -webkit-appearance: none;
+  pointer-events: all;
+  width: 24px;
+  height: 24px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #c6c6c6;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #f7f7f7;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+  -webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+}
+
+input[type="number"] {
+  color: #8a8383;
+  width: 50px;
+  height: 30px;
+  font-size: 20px;
+  border: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  background-color: #c6c6c6;
+  pointer-events: none;
+}
+
+#fromSlider {
+  height: 0;
+  z-index: 1;
 }
 
 @media (max-width: 992px) {
